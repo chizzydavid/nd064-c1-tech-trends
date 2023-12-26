@@ -1,0 +1,43 @@
+# set up the default terminal
+ENV["TERM"]="linux"
+
+# set minimum version for Vagrant
+Vagrant.require_version ">= 2.2.10"
+Vagrant.configure("2") do |config|
+  config.vm.provision "shell",
+    inline: "sudo su - && zypper update && zypper install -y apparmor-parser"
+  
+  # Set the image for the vagrant box
+  # config.vm.box = "opensuse/Leap-15.2.x86_64"
+  # config.vm.box = "hashicorp/bionic64"
+  # config.vm.box = "hashicorp/precise64"
+  
+  # Set the image version
+  # config.vm.box_version = "15.2.31.632"
+  # config.vm.box_version = "1.0.282"  
+  # config.vm.box_version = "1.1.0"
+
+
+  config.vm.box = "bytesguy/ubuntu-server-20.04-arm64"
+  config.vm.box_version = "1.0.0"  
+
+
+
+  # Forward the ports from the guest VM to the local host machine
+  # Forward more ports, as needed
+  config.vm.network "forwarded_port", guest: 8080, host: 8080
+  config.vm.network "forwarded_port", guest: 6111, host: 6111
+  config.vm.network "forwarded_port", guest: 6112, host: 6112
+
+  # Set the static IP for the vagrant box
+  # config.vm.network "private_network", ip: "192.168.56.4"
+  
+  # Configure the parameters for vmware_fusion provider
+  config.vm.provider "vmware_fusion" do |vb|
+    # vb.gui = true
+    # vb.vmx["ethernet0.pcislotnumber"] = "32"
+    vb.memory = "3096"
+    vb.cpus = 3
+    # vb.customize ["modifyvm", :id, "--ioapic", "on"]
+  end
+end
